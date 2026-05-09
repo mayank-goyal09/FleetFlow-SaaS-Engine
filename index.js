@@ -40,14 +40,20 @@ app.get('/', (req, res) => {
 app.use(errorHandler);
 
 // MongoDB Connection
+console.log("Attempting to connect to MongoDB...");
+if (!process.env.MONGO_URI) {
+    console.error("CRITICAL ERROR: MONGO_URI is not defined in environment variables!");
+    process.exit(1);
+}
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
-        console.log("MongoDB connected successfully");
+        console.log("✅ MongoDB connected successfully");
         app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
+            console.log(`🚀 Server is running on port ${PORT}`);
         });
     })
     .catch(err => {
-        console.error("MongoDB connection error:", err);
+        console.error("❌ MongoDB connection error:", err.message);
+        process.exit(1);
     });
