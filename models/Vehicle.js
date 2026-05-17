@@ -7,7 +7,7 @@ const vehicleSchema = new mongoose.Schema({
     licensePlate: { type: String, required: true, unique: true },
     status: {
         type: String,
-        enum: ['Available', 'In-Transit', 'Maintenance', 'Retired'],
+        enum: ['Available', 'Assigned', 'In-Transit', 'Maintenance', 'Retired'],
         default: 'Available'
     },
     currentLocation: {
@@ -15,8 +15,10 @@ const vehicleSchema = new mongoose.Schema({
         lng: { type: Number }
     },
     lastServiceDate: { type: Date },
+    nextAvailableAt: { type: Date },
+    manager: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 }, { timestamps: true });
- // Automatically adds createdAt and updatedAt fields
+// Automatically adds createdAt and updatedAt fields
 
 // The Power (Model)
 module.exports = mongoose.model('Vehicle', vehicleSchema);

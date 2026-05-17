@@ -3,8 +3,8 @@ const router = express.Router();
 const { addVehicle, getVehicles, updateLocation, deleteVehicle } = require('../controllers/vehicleController');
 const { protect } = require('../middleware/authMiddleware'); // Import the bouncer
 
-// Public route: Get all vehicles
-router.get('/', getVehicles);
+// Protected route: Get all vehicles for the manager
+router.get('/', protect, getVehicles);
 
 // Protected routes
 router.post('/add', protect, addVehicle);

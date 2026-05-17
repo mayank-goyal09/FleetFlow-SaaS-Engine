@@ -13,7 +13,7 @@ const protect = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // Add the user ID from the token to the request object
-      req.user = decoded.id;
+      req.user = { id: decoded.id };
 
       next(); // Let them through to the controller!
     } catch (error) {
@@ -22,7 +22,7 @@ const protect = async (req, res, next) => {
   }
 
   if (!token) {
-    res.status(401).json({ message: 'No token, authorization denied' });
+    return res.status(401).json({ message: 'No token, authorization denied' });
   }
 };
 

@@ -3,9 +3,15 @@ const Vehicle = require('../models/Vehicle');
 // Create a new vehicle
 exports.addVehicle = async (req, res) => {
   try {
-    const vehicle = await Vehicle.create(req.body);
+    const vehicle = await Vehicle.create({ ...req.body, manager: req.user.id });
     res.status(201).json({ success: true, data: vehicle });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ 
+        success: false, 
+        error: "A vehicle with this license plate already exists." 
+      });
+    }
     res.status(400).json({ success: false, error: error.message });
   }
 };
@@ -13,7 +19,7 @@ exports.addVehicle = async (req, res) => {
 // Get all vehicles
 exports.getVehicles = async (req, res) => {
   try {
-    const vehicles = await Vehicle.find();
+    const vehicles = await Vehicle.find({ manager: req.user.id });
     res.status(200).json({ success: true, count: vehicles.length, data: vehicles });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
